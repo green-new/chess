@@ -4,9 +4,9 @@ public class Engine implements Runnable {
 
     private final Window window;
 
-    private IChess gameLogic;
+    private final IChess gameLogic;
 
-    private Timer timer;
+    private final Timer timer;
 
     public Engine(String title, int width, int height, IChess gameLogic) {
         this.window = Window.getWindow(width, height, title);
@@ -51,6 +51,8 @@ public class Engine implements Runnable {
 
             render();
         }
+
+        window.cleanup();
     }
 
     protected void cleanup() {

@@ -15,15 +15,11 @@ public class Shader {
 
     private int fragmentShader;
 
-    private final Map<String, Integer> uniforms;
-
     public Shader() throws Exception{
         program = glCreateProgram();
         if (program == 0) {
             throw new Exception("Error creating shader program");
         }
-
-        uniforms = new HashMap<>();
     }
 
     public void createVertexShader(String path) throws Exception {
@@ -69,21 +65,6 @@ public class Shader {
             System.err.println("Warning validating shader code: " + glGetProgramInfoLog(program, 1024));
         }
 
-    }
-
-    public void createUniform(String name) throws Exception{
-        int loc = glGetUniformLocation(program, name);
-        if (loc < 0) {
-            throw new Exception("Could not find uniform: " + name);
-        }
-        uniforms.put(name, loc);
-    }
-
-    public void setUniform(Matrix4f value, String name) {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            glUniformMatrix4fv(uniforms.get(name), false,
-                    value.get(stack.mallocFloat(16)));
-        }
     }
 
     public void setInt(int value, String name) {

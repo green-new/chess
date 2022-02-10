@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 public class Utils {
 
-    public float[] hexTo3f(int hex) {
+    public static float[] hexTo3f(int hex) {
         int blueMask = 0xFF, greenMask = 0x00FF00, redMask = 0xFF0000;
-        int r = hex & redMask;
-        int g = hex & greenMask;
+        int r = (hex & redMask) >> 16;
+        int g = (hex & greenMask) >> 8;
         int b = hex & blueMask;
         return new float[] {
                 r / 255.0f,

@@ -18,9 +18,13 @@ public class Window {
     private static Window window = null;
 
     private int width;
+
     private int height;
+
     private final String title;
+
     private long windowHandle;
+
     private boolean resized;
 
     public Window(int width, int height, String title) {
@@ -35,20 +39,6 @@ public class Window {
             Window.window = new Window(width, height, title);
         }
         return window;
-    }
-
-    public void run()
-    {
-        init();
-        loop();
-
-        // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(windowHandle);
-        glfwDestroyWindow(windowHandle);
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
     public void init() {
@@ -108,20 +98,13 @@ public class Window {
         glfwSwapInterval(1);
         glfwShowWindow(windowHandle);
         GL.createCapabilities();
-        glClearColor(0.2f, 0.1f, 0.2f, 0.0f);
+        glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     }
 
     public void update() {
         glfwSwapBuffers(windowHandle);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
         glfwPollEvents();
-    }
-
-    private void loop() {
-        while (!glfwWindowShouldClose(windowHandle)) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
-            update();
-        }
     }
 
     public void setClearColor(float r, float g, float b, float alpha) {
@@ -153,5 +136,15 @@ public class Window {
 
     public boolean isResized() {
         return resized;
+    }
+
+    public void cleanup() {
+        // Free the window callbacks and destroy the window
+        glfwFreeCallbacks(windowHandle);
+        glfwDestroyWindow(windowHandle);
+
+        // Terminate GLFW and free the error callback
+        glfwTerminate();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 }

@@ -2,6 +2,7 @@ package ui;
 
 import core.Board;
 import engine.Window;
+import org.joml.Matrix4f;
 import ui.shader.Shader;
 import engine.Utils;
 
@@ -17,9 +18,6 @@ public class Render {
         shaderProgram.createVertexShader(Utils.loadResource("/tile.vs"));
         shaderProgram.createFragmentShader(Utils.loadResource("/tile.fs"));
         shaderProgram.link();
-
-        shaderProgram.createUniform("transform");
-        shaderProgram.createUniform("cc");
     }
 
     public void clear() {
@@ -28,13 +26,12 @@ public class Render {
 
     public void renderBoard(Board board) {
         shaderProgram.bind();
+        shaderProgram.setFloat(Board.SIZE, "BoardSize");
         for (Tile tile : board.Tiles) {
             glBindVertexArray(tile.getVao());
             //glEnableVertexAttribArray(0);
             int rank = tile.getRank();
             int file = tile.getFile();
-
-            shaderProgram.setUniform();
 
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }

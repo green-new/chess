@@ -3,13 +3,18 @@ package ui;
 import core.Board;
 import engine.Window;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.lwjgl.system.MemoryStack;
 import ui.shader.Shader;
 import engine.Utils;
+
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class Render {
+
     private Shader shaderProgram;
 
     public void init() throws Exception {
@@ -27,6 +32,7 @@ public class Render {
     public void renderBoard(Window window, Board board) {
         shaderProgram.bind();
         glViewport((int) (window.getWidth() * 0.15f), (int) (window.getHeight() * 0.15f), (int) (window.getHeight() * 0.70f), (int) (window.getHeight() * 0.70f));
+        shaderProgram.setVec2((float)window.getWidth(), (float)window.getHeight(), "u_resolution");
         for (Tile tile : board.Tiles) {
             glBindVertexArray(tile.getVao());
             glEnableVertexAttribArray(0);

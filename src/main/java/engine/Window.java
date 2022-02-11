@@ -94,7 +94,6 @@ public class Window {
         glfwSwapInterval(1);
         glfwShowWindow(windowHandle);
         GL.createCapabilities();
-        glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     }
 
     public void update() {

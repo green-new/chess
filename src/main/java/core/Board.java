@@ -2,8 +2,6 @@ package core;
 
 import ui.Tile;
 
-import static org.lwjgl.opengl.GL11.glViewport;
-
 public class Board {
     public static final int SIZE = 8;
 
@@ -19,7 +17,6 @@ public class Board {
     public void init() {
         for (int rank = 0; rank < SIZE; rank++) {
             for (int file = 0; file < SIZE; file++) {
-                System.out.println("Generating tile... " + (SIZE * rank + file));
                 this.Tiles[SIZE * rank + file] = new Tile(rank, file);
             }
         }

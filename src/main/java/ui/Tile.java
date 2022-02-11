@@ -2,13 +2,9 @@ package ui;
 
 import core.Board;
 import engine.Utils;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -26,8 +22,6 @@ public class Tile {
     private final int rank;
 
     private final int file;
-
-    private Matrix4f transformTile;
 
     private static final int BlackSquareColor = 0x2a2a2a;
 
@@ -48,7 +42,6 @@ public class Tile {
             posVbo = glGenBuffers();
 
             float[] tilePos = BuildTileVertices();
-            prnVertices(tilePos);
 
             posBuffer = MemoryUtil.memAllocFloat(tilePos.length);
             posBuffer.put(tilePos).flip();
@@ -95,7 +88,6 @@ public class Tile {
 
     private float[] BuildTileVertices() {
         // Perform scale transformation based on board size
-        System.out.println(this.rank + ", " + this.file);
         float[] TileVertices = new float[]{
                 (1.0f / Board.SIZE), (1.0f / Board.SIZE), 0.0f,
                 (-1.0f / Board.SIZE), (1.0f / Board.SIZE), 0.0f,
@@ -112,7 +104,6 @@ public class Tile {
         // Need to subtract these values.
         float NormalizedRank = Tile.normalize(this.rank) - 1.0f / 8.0f;
         float NormalizedFile = Tile.normalize(this.file) - 1.0f / 8.0f;
-        System.out.println(NormalizedRank + ", " + NormalizedFile);
 
         // Subtract to vertices
         TileVertices[0] += NormalizedRank;
@@ -126,15 +117,6 @@ public class Tile {
 
         return TileVertices;
     }
-
-    private void prnVertices(float[] verts) {
-        System.out.println();
-        for (float v : verts) {
-            System.out.print(v + "\t");
-        }
-        System.out.println();
-    }
-
 
     public boolean isWhite() {
         return (rank + file) % 2 == 0;

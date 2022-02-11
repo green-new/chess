@@ -3,6 +3,7 @@ package ui.shader;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
 
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +66,10 @@ public class Shader {
             System.err.println("Warning validating shader code: " + glGetProgramInfoLog(program, 1024));
         }
 
+    }
+
+    public void setVec2(float v0, float v1, String name) {
+        glUniform2fv(glGetUniformLocation(program, name), FloatBuffer.allocate(2).put(v0).put(v1));
     }
 
     public void setInt(int value, String name) {

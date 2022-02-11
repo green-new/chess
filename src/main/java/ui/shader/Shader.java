@@ -1,11 +1,9 @@
 package ui.shader;
 
-import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -68,8 +66,12 @@ public class Shader {
 
     }
 
-    public void setVec2(float v0, float v1, String name) {
-        glUniform2fv(glGetUniformLocation(program, name), FloatBuffer.allocate(2).put(v0).put(v1));
+    public void setVec2(Vector2f value, String name) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer b = stack.mallocFloat(2);
+            value.get(0, b);
+            glUniform2fv(glGetUniformLocation(program, name), b);
+        }
     }
 
     public void setInt(int value, String name) {

@@ -1,5 +1,7 @@
 package engine;
 
+import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -141,6 +143,14 @@ public class Window {
         // Terminate GLFW and free the error callback
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    }
+
+    public Vector2f getResolutionf() {
+        return new Vector2f((float)width, (float)height);
+    }
+
+    public Vector2i getResolutioni() {
+        return new Vector2i(width, height);
     }
 
     public void setBackground(float[] hexTo3f) {

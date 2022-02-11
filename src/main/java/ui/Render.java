@@ -2,13 +2,8 @@ package ui;
 
 import core.Board;
 import engine.Window;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.lwjgl.system.MemoryStack;
 import ui.shader.Shader;
 import engine.Utils;
-
-import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -18,10 +13,10 @@ public class Render {
     private Shader shaderProgram;
 
     public void init() throws Exception {
-        // Create shader
+        // Create shader for board
         shaderProgram = new Shader();
-        shaderProgram.createVertexShader(Utils.loadResource("/tile.vs"));
-        shaderProgram.createFragmentShader(Utils.loadResource("/tile.fs"));
+        shaderProgram.createVertexShader(Utils.loadResource("/board.vs"));
+        shaderProgram.createFragmentShader(Utils.loadResource("/board.fs"));
         shaderProgram.link();
     }
 
@@ -31,8 +26,11 @@ public class Render {
 
     public void renderBoard(Window window, Board board) {
         shaderProgram.bind();
-        glViewport((int) (window.getWidth() * 0.15f), (int) (window.getHeight() * 0.15f), (int) (window.getHeight() * 0.70f), (int) (window.getHeight() * 0.70f));
-        shaderProgram.setVec2((float)window.getWidth(), (float)window.getHeight(), "u_resolution");
+
+        // Set the board size of the window
+        glViewport((int) (window.getWidth() * 0.05f), (int) (window.getHeight() * 0.05f), (int) (window.getHeight() * 0.90f), (int) (window.getHeight() * 0.90f));
+        shaderProgram.setVec2(window.getResolutionf(), "u_resolution");
+
         for (Tile tile : board.Tiles) {
             glBindVertexArray(tile.getVao());
             glEnableVertexAttribArray(0);
@@ -58,16 +56,9 @@ public class Render {
             glViewport(0, 0, window.getWidth(), window.getHeight());
             window.setResized(false);
         }
-        shaderProgram.bind();
-
-        //glBindVertexArray(tile.getVao());
-        //glEnableVertexAttribArray(0);
-        //glDrawArrays(GL_TRIANGLES, 0, tile.getVertexCount());
 
         // Restore state
         glBindVertexArray(0);
-
-        shaderProgram.unbind();
     }
 
     public void cleanup() {

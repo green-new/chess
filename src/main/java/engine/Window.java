@@ -15,7 +15,9 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
-    private static Window window = null;
+    private static final Window window = null;
+
+    private final boolean resizable;
 
     private int width;
 
@@ -27,18 +29,12 @@ public class Window {
 
     private boolean resized;
 
-    public Window(int width, int height, String title) {
+    public Window(int width, int height, String title, boolean resizable) {
         this.width = width;
         this.height = height;
         this.title = title;
         this.resized = false;
-    }
-
-    public static Window getWindow(int width, int height, String title) {
-        if (Window.window == null) {
-            Window.window = new Window(width, height, title);
-        }
-        return window;
+        this.resizable = resizable;
     }
 
     public void init() {
@@ -53,7 +49,7 @@ public class Window {
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        glfwWindowHint(GLFW_RESIZABLE, this.resizable ? GLFW_TRUE : GLFW_FALSE); // the window will be resizable
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -146,5 +142,9 @@ public class Window {
         // Terminate GLFW and free the error callback
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    }
+
+    public void setBackground(float[] hexTo3f) {
+        this.setClearColor(hexTo3f[0], hexTo3f[1], hexTo3f[2], 1.0f);
     }
 }

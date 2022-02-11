@@ -1,6 +1,7 @@
 package core;
 
 import engine.IChess;
+import engine.Utils;
 import engine.Window;
 import ui.Render;
 
@@ -36,8 +37,10 @@ public class Chess implements IChess {
 
     @Override
     public void render(Window window) {
+        int backgroundColor = 0x9b9b9b;
+        window.setBackground(Utils.hexTo3f(backgroundColor));
         render.render(window);
-        render.renderBoard(board);
+        render.renderBoard(window, board);
     }
 
     @Override

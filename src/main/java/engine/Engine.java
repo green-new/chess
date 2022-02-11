@@ -8,8 +8,8 @@ public class Engine implements Runnable {
 
     private final Timer timer;
 
-    public Engine(String title, int width, int height, IChess gameLogic) {
-        this.window = Window.getWindow(width, height, title);
+    public Engine(String title, int width, int height, boolean resizable, IChess gameLogic) {
+        this.window = new Window(width, height, title, resizable);
         this.gameLogic = gameLogic;
         this.timer = new Timer();
     }

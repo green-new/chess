@@ -24,16 +24,20 @@ public class Render {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    public void renderBoard(Board board) {
+    public void renderBoard(Window window, Board board) {
         shaderProgram.bind();
-        shaderProgram.setFloat(Board.SIZE, "BoardSize");
+        glViewport((int) (window.getWidth() * 0.15f), (int) (window.getHeight() * 0.15f), (int) (window.getHeight() * 0.70f), (int) (window.getHeight() * 0.70f));
         for (Tile tile : board.Tiles) {
             glBindVertexArray(tile.getVao());
-            //glEnableVertexAttribArray(0);
-            int rank = tile.getRank();
-            int file = tile.getFile();
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
 
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+            // Restore state
+            glDisableVertexAttribArray(0);
+            glDisableVertexAttribArray(1);
+            glBindVertexArray(0);
         }
 
         // Restore state

@@ -11,4 +11,8 @@ public class Piece {
 
     public static final int White = 8;
     public static final int Black = 16;
+
+    public static int getColor(int piece) {
+        return (piece & Piece.White) | (piece & Piece.Black);
+    }
 }

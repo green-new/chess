@@ -1,6 +1,7 @@
 package ui;
 
 import core.Board;
+import core.Piece;
 import engine.Window;
 import ui.shader.Shader;
 import engine.Utils;
@@ -34,29 +35,32 @@ public class Render {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    private void renderTile(Tile tile) {
+    private void renderCheckerboard(Checkerboard checkerboard) {
         // Render tile
-        glBindVertexArray(tile.getVao());
+        glBindVertexArray(checkerboard.getVao());
 
-        tile.enableVertexAttribs();
-        glDrawElements(GL_TRIANGLES, tile.vertexCount(), GL_UNSIGNED_INT, 0);
-        tile.disableVertexAttribs();
+        checkerboard.enableVertexAttribs();
+        glDrawElements(GL_TRIANGLES, checkerboard.vertexCount(), GL_UNSIGNED_INT, 0);
+        checkerboard.disableVertexAttribs();
 
         glBindVertexArray(0);
     }
 
-    private void renderPieces(int vao) {
-        // Render piece
-        glBindVertexArray(vao);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
+    private void renderPieces(int[] board) {
+        for (int rank = 0; rank < Board.SIZE; rank++) {
+            for (int file = 0; file < Board.SIZE; file++) {
+                int piece = board[rank * Board.SIZE + file];
+                int color = Piece.getColor(piece);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+                if (color == Piece.White) {
+                    
+                } else if (color == Piece.Black) {
 
-        // Restore state
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glBindVertexArray(0);
+                } else {
+                    return;
+                }
+            }
+        }
     }
 
     /**
@@ -77,14 +81,12 @@ public class Render {
 
         // Set the board size of the window
         glViewport(board.boardOffsetX(), board.boardOffsetY(), board.boardWidth(), board.boardHeight());
-        boardShader.setVec2(window.getRes2f(), "u_resolution");
+        boardShader.setVec2(board.getRes2f(), "u_resolution");
+        boardShader.setVec2(board.getOffset2f(), "u_offset");
 
-        // Render the tiles first
-
-        for (int pos = 0; pos < Board.SIZE * Board.SIZE; pos++) {
-            this.renderTile(board.Tiles[pos]);
-            //this.renderPieces(board.Board[pos]);
-        }
+        this.renderCheckerboard(board.checkerboard);
+        this.renderPieces(board.Board);
+        // glViewport(0, 0, );
 
         glBindVertexArray(0);
         boardShader.unbind();

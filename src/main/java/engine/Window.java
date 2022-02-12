@@ -145,11 +145,11 @@ public class Window {
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
-    public Vector2f getResolutionf() {
+    public Vector2f getRes2f() {
         return new Vector2f((float)width, (float)height);
     }
 
-    public Vector2i getResolutioni() {
+    public Vector2i getRes2i() {
         return new Vector2i(width, height);
     }
 

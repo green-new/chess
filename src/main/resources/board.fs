@@ -6,6 +6,9 @@ in vec3 outColor;
 
 uniform vec2 u_resolution;
 
+// Add tile patterns (wood, marble, etc)
+// Give lifelike textures (optional)
+
 void main() {
     vec2 st = gl_FragCoord.xy/u_resolution;
     float pct = 0.0;

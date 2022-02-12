@@ -27,6 +27,10 @@ public class Tile {
 
     private static final int WhiteSquareColor = 0x808080;
 
+    private static final int PosAttribIndex = 0;
+
+    private static final int ColorAttribIndex = 1;
+
     public Tile(int rank, int file) {
         this.rank = rank;
         this.file = file;
@@ -40,15 +44,12 @@ public class Tile {
 
             // Position VBO
             posVbo = glGenBuffers();
-
             float[] tilePos = BuildTileVertices();
-
             posBuffer = MemoryUtil.memAllocFloat(tilePos.length);
             posBuffer.put(tilePos).flip();
             glBindBuffer(GL_ARRAY_BUFFER, posVbo);
             glBufferData(GL_ARRAY_BUFFER, posBuffer, GL_STATIC_DRAW);
-            glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(Tile.PosAttribIndex, 3, GL_FLOAT, false, 0, 0);
 
             // Color VBO
             colorVbo = glGenBuffers();
@@ -59,15 +60,14 @@ public class Tile {
             colorBuffer.put(squareColor).put(squareColor).put(squareColor).put(squareColor).flip();
             glBindBuffer(GL_ARRAY_BUFFER, colorVbo);
             glBufferData(GL_ARRAY_BUFFER, colorBuffer, GL_STATIC_DRAW);
-            glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
-            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(Tile.ColorAttribIndex, 3, GL_FLOAT, false, 0, 0);
+
+            this.enableVertexAttribs();
 
             // Index VBO
             idxVbo = glGenBuffers();
-            int[] tileIdx = new int[]
-                    {0, 1, 3, 3, 1, 2};
-            indicesBuffer = MemoryUtil.memAllocInt(tileIdx.length);
-            indicesBuffer.put(tileIdx).flip();
+            indicesBuffer = MemoryUtil.memAllocInt(BasicQuad.Indices.length);
+            indicesBuffer.put(BasicQuad.Indices).flip();
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idxVbo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
 
@@ -87,35 +87,15 @@ public class Tile {
     }
 
     private float[] BuildTileVertices() {
-        // Perform scale transformation based on board size
-        float[] TileVertices = new float[]{
-                (1.0f / Board.SIZE), (1.0f / Board.SIZE), 0.0f,
-                (-1.0f / Board.SIZE), (1.0f / Board.SIZE), 0.0f,
-                (-1.0f / Board.SIZE), (-1.0f / Board.SIZE), 0.0f,
-                (1.0f / Board.SIZE), (-1.0f / Board.SIZE), 0.0f
-        };
+        float[] clone = BasicQuad.Vertices.clone();
+        float normalX = Transformation.normalize(this.rank, Board.SIZE);
+        float normalY = Transformation.normalize(this.file, Board.SIZE);
+        float normalZ = 0.0f;
 
-        // Perform translation transformation based on rank, file position
-        // Normalize them
-        // Rank and file domain: [0, 7]
-        // New domain: [-1, 1].
-        // Therefore, 0, 0 would be -1.0f, -1.0f.
-        // 7, 7 would be +1.0, +1.0f.
-        // Need to subtract these values.
-        float NormalizedRank = Tile.normalize(this.rank) - 1.0f / 8.0f;
-        float NormalizedFile = Tile.normalize(this.file) - 1.0f / 8.0f;
+        Transformation.scale(clone, 1.0f / Board.SIZE);
+        Transformation.translate(clone, normalX + 0.125f, normalY + 0.125f, normalZ);
 
-        // Subtract to vertices
-        TileVertices[0] += NormalizedRank;
-        TileVertices[1] += NormalizedFile;
-        TileVertices[3] += NormalizedRank;
-        TileVertices[4] += NormalizedFile;
-        TileVertices[6] += NormalizedRank;
-        TileVertices[7] += NormalizedFile;
-        TileVertices[9] += NormalizedRank;
-        TileVertices[10] += NormalizedFile;
-
-        return TileVertices;
+        return clone;
     }
 
     public boolean isWhite() {
@@ -126,8 +106,8 @@ public class Tile {
         return vao;
     }
 
-    public void cleanUp() {
-        glDisableVertexAttribArray(0);
+    public void cleanup() {
+        this.disableVertexAttribs();
 
         // Delete the VBOs
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -140,16 +120,17 @@ public class Tile {
         glDeleteVertexArrays(vao);
     }
 
-    public int getRank() {
-        return rank;
+    public int vertexCount() {
+        return 6;
     }
 
-    public int getFile() {
-        return file;
+    public void enableVertexAttribs() {
+        glEnableVertexAttribArray(Tile.PosAttribIndex);
+        glEnableVertexAttribArray(Tile.ColorAttribIndex);
     }
 
-    public static float normalize(int x) {
-        x+=1;
-        return 2.0f * ((float)x / (float)(Board.SIZE)) - 1.0f;
+    public void disableVertexAttribs() {
+        glDisableVertexAttribArray(Tile.PosAttribIndex);
+        glDisableVertexAttribArray(Tile.ColorAttribIndex);
     }
 }

@@ -12,7 +12,13 @@ public class Piece {
     public static final int White = 8;
     public static final int Black = 16;
 
-    public static int getColor(int piece) {
-        return (piece & Piece.White) | (piece & Piece.Black);
+    public static final int colorMask = Piece.White | Piece.Black;
+
+    public static boolean isColor(int piece, int color) {
+        return (piece & color) == 0;
+    }
+
+    public static int Color(int piece) {
+        return (piece & colorMask);
     }
 }

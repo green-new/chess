@@ -99,6 +99,10 @@ public class Window {
     }
 
     public void update() {
+        if (this.isResized()) {
+            glViewport(0, 0, this.getWidth(), this.getHeight());
+            this.setResized(false);
+        }
         glfwSwapBuffers(windowHandle);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
         glfwPollEvents();

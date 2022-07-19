@@ -1,7 +1,8 @@
 package engine;
 
 public interface IChess {
-    void init() throws Exception;
+
+    void init();
 
     void input(Window window);
 

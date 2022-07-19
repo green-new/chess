@@ -19,7 +19,7 @@ public class Chess implements IChess {
     }
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         render.init();
         board.init();
     }

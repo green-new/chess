@@ -21,21 +21,21 @@ public class Shader {
         }
     }
 
-    public void createVertexShader(String path) throws Exception {
-        vertexShader = createShader(path, GL_VERTEX_SHADER);
+    public void createVertexShader(String code) throws Exception {
+        vertexShader = createShader(code, GL_VERTEX_SHADER);
     }
 
-    public void createFragmentShader(String path) throws Exception {
-        fragmentShader = createShader(path, GL_FRAGMENT_SHADER);
+    public void createFragmentShader(String code) throws Exception {
+        fragmentShader = createShader(code, GL_FRAGMENT_SHADER);
     }
 
-    private int createShader(String path, int shaderType) throws Exception {
+    private int createShader(String code, int shaderType) throws Exception {
         int shader = glCreateShader(shaderType);
         if (shader == 0) {
             throw new Exception("Error creating shader of type " + shader);
         }
 
-        glShaderSource(shader, path);
+        glShaderSource(shader, code);
         glCompileShader(shader);
 
         if (glGetShaderi(shader, GL_COMPILE_STATUS) == 0) {

@@ -12,13 +12,14 @@ public class Piece {
     public static final int White = 8;
     public static final int Black = 16;
 
-    public static final int colorMask = Piece.White | Piece.Black;
+    public static final int colorMask = White | Black;
+    public static final int pieceMask = None | King | Pawn | Knight | Bishop | Rook | Queen;
 
-    public static boolean isColor(int piece, int color) {
-        return (piece & color) == 0;
+    public static int getType(int piece) {
+        return (piece & pieceMask);
     }
 
-    public static int Color(int piece) {
+    public static int getColor(int piece) {
         return (piece & colorMask);
     }
 }

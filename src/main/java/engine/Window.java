@@ -5,7 +5,6 @@ import org.joml.Vector2i;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
-import core.Board;
 
 import java.nio.*;
 import java.util.Objects;
@@ -17,21 +16,14 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
-    private static final Window window = null;
-
     private final boolean resizable;
-
     private int width;
-
     private int height;
-
     private final String title;
-
     private long windowHandle;
-
     private boolean resized;
 
-    public Window(int width, int height, String title, boolean resizable) {
+    protected Window(int width, int height, String title, boolean resizable) {
         this.width = width;
         this.height = height;
         this.title = title;
@@ -39,7 +31,7 @@ public class Window {
         this.resizable = resizable;
     }
 
-    public void init() {
+    protected void init() {
         // Set up an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -98,7 +90,7 @@ public class Window {
         GL.createCapabilities();
     }
 
-    public void update() {
+    protected void update() {
         if (this.isResized()) {
             glViewport(0, 0, this.getWidth(), this.getHeight());
             this.setResized(false);
@@ -111,35 +103,28 @@ public class Window {
     public void setClearColor(float r, float g, float b, float alpha) {
         glClearColor(r, g, b, alpha);
     }
-
     public boolean isKeyPressed(int keyCode) {
         return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
     }
-
     public boolean windowShouldClose() {
         return glfwWindowShouldClose(windowHandle);
     }
-
     public String getTitle() {
         return title;
     }
-
     public int getWidth() {
         return width;
     }
     public int getHeight() {
         return height;
     }
-
     public void setResized(boolean f) {
         this.resized = f;
     }
-
     public boolean isResized() {
         return resized;
     }
-
-    public void cleanup() {
+    public void destroy() {
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
@@ -152,11 +137,9 @@ public class Window {
     public Vector2f getRes2f() {
         return new Vector2f((float)width, (float)height);
     }
-
     public Vector2i getRes2i() {
         return new Vector2i(width, height);
     }
-
     public void setBackground(float[] hexTo3f) {
         this.setClearColor(hexTo3f[0], hexTo3f[1], hexTo3f[2], 1.0f);
     }

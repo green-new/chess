@@ -14,17 +14,24 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
-    public final int texid;
+    private final int width;
+    private final int height;
+    private final int texid;
 
-    public Texture(String filename) throws Exception {
-        this(loadTexture(filename));
-    }
-
-    public Texture(int texid) {
+    public Texture(int texid, int width, int height) {
         this.texid = texid;
+        this.width = width;
+        this.height = height;
     }
 
-    private static int loadTexture(String filename) throws Exception {
+    public int getWidth() { return this.width; }
+    public int getHeight() { return this.height; }
+    public int getTexid() { return this.texid; }
+    public void cleanup() {
+        glDeleteTextures(this.texid);
+    }
+
+    private static Texture loadTexture(String filename) throws Exception {
         int width;
         int height;
         ByteBuffer bb;// = ImageIO.read(new File(filename)).getRaster().getDataBuffer();
@@ -62,9 +69,6 @@ public class Texture {
 
         stbi_image_free(bb);
 
-        return textureId;
-    }
-    public void cleanup() {
-        glDeleteTextures(this.texid);
+        return new Texture(textureId, width, height);
     }
 }

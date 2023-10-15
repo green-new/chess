@@ -1,0 +1,11 @@
+Needs:
+- Server-client networking
+    - 1. Server runs the engine
+    - 2. Client connects to the server (localhost) and responds to interfaces
+    - 3. Send link to other users to play
+    - 4. External client connects to server to play
+
+Java networking libraries:
+- SimpleNet: https://github.com/jhg023/SimpleNet
+- Netty
+- Java Socket

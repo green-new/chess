@@ -9,12 +9,10 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Shader {
     private final int program;
-
     private int vertexShader;
-
     private int fragmentShader;
 
-    public Shader() throws Exception{
+    public Shader() throws Exception {
         program = glCreateProgram();
         if (program == 0) {
             throw new Exception("Error creating shader program");
